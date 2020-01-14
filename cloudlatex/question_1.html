@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>プログラミングでももたろう</title>
+
+  <script src="./google-blockly/blockly_compressed.js"></script>
+  <script src="./google-blockly/blocks_compressed.js"></script>
+  <script src="./google-blockly/javascript_compressed.js"></script>
+  <script src="./google-blockly/msg/js/ja.js"></script>
+
+
+  <script src="./google-blockly/blocks/hirou_block.js"></script>
+  <script src="./google-blockly/generators/javaScript/hirou_block_code.js"></script>
+
+  <script src="./google-blockly/blocks/arau_block.js"></script>
+  <script src="./google-blockly/generators/javaScript/arau_block_code.js"></script>
+
+  <script src="./google-blockly/blocks/end_block.js"></script>
+  <script src="./google-blockly/generators/javaScript/end_block_code.js"></script>
+
+  <script src="./google-blockly/blocks/momo_if.js"></script>
+  <script src="../../generators/javaScript/momo_if_code.js"></script>
+
+  <script src="./google-blockly/blocks/ringo_if.js"></script>
+  <script src="./google-blockly/generators/javaScript/ringo_if_code.js"></script>
+
+  <script src="./google-blockly/blocks/new_repeat.js"></script>
+  <script src="./google-blockly/generators/javaScript/new_repeat_code.js"></script>
+
+  <script src="./google-blockly/blocks/new_if.js"></script>
+  <script src="./google-blockly/generators/javaScript/new_if_code.js"></script>
+
+  <script src="./google-blockly/blocks/new_ifelse.js"></script>
+  <script src="./google-blockly/generators/javaScript/new_ifelse_code.js"></script>
+
+  <script src="./google-blockly/blocks/new_iftest.js"></script>
+  <script src="./google-blockly/generators/javaScript/new_iftest_code.js"></script>
+
+
+  <link rel="stylesheet" type="text/css" href="./css/question.css">
+  <style>
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  table {
+    height: 100%;
+    width: 100%;
+  }
+  #blocklyArea {
+    height: 99%;
+  }
+  </style>
+
+  <script type="text/javascript">
+  if ((navigator.userAgent.indexOf('iPhone') > 0) || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
+    document.write('<meta name="viewport" content="width=device-width, initial-scale=0.5,minimum-scale=0.5, maximum-scale=0.5, user-scalable=yes">');
+  }else{
+    document.write('<meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1, maximum-scale=1, user-scalable=yes">');
+  }
+</script>
+
+
+</head>
+<body>
+
+  <div class="main_container">
+
+    <div class="left">
+
+      <div id="blocklyArea">
+
+
+        <div id="blocklyDiv" style="position: absolute"></div>
+
+
+      </div>
+
+
+
+
+
+    </div>
+
+
+    <div class="right">
+
+      <div id="top">
+        <canvas id="Canvas_oba" width="1000px" height="500px"></canvas>
+        <canvas id="Canvas_momo" width="1000px" height="500px"></canvas>
+        <canvas id="Canvas_ringo" width="1000px" height="500px"></canvas>
+        <canvas id="Canvas_bg" width="1000px" height="500px"></canvas>
+
+
+
+
+
+
+      </div>
+
+      <div id="status">
+
+        <span id="output_area">[もくひょう]せんたく0/5まい　もも0/1こ</span>
+
+
+      </div>
+
+      <div id="menu_area">
+
+        <button class="btn" onclick="runCode()" id="runcode">うごかす</button>
+        <button class="btn" onclick="tutorial()">せつめいをきく</button>
+        <button class="btn" onclick="speak_cancel()">せつめいをとめる</button>
+        <button type="button" class="btn" onclick="window.location.reload();">さいしょから</button>
+        <button type="button" class="btn" onclick="location.href='./index.html'">ほーむ</button>
+
+
+
+      </div>
+
+      <div id="bottom">
+
+        おばあさんが、かわへせんたくにいくと…どんぶらこ、どんぶらこ、とももがながれてきました。
+
+
+
+
+
+        <span id="output_area2"></span>
+        <span id="next_page"></span>
+
+
+
+
+
+
+
+      </div>
+
+
+
+    </div>
+
+  </div>
+
+
+
+  <xml xmlns="http://www.w3.org/1999/xhtml" id="workspaceBlocks" style="display:none">
+    <variables></variables>
+
+  </xml>
+
+  <xml id="toolbox" style="display: none">
+
+    <category name="ぶろっく" colour="#93a55b">
+      <block type="hirou_block"></block>
+      <block type="arau_block"></block>
+
+      <block type="momo_if"></block>
+      <block type="ringo_if"></block>
+      <block type="new_if"></block>
+      <block type="new_ifelse"></block>
+      <block type="new_repeat">
+        <value name="TIMES">
+          <shadow type="math_number">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_number">
+        <field name="NUM">0</field>
+      </block>
+
+    </category>
+  </xml><!--toolbar設定xml-->
+
+  <script>
+  speak_cancel();
+  var flag_id,momo_anim_interval,ringo_anim_interval,input_text,ss;
+  var block_id,momo,ringo=[];
+  var momo_canvas_hantei=0;
+  var momo_sentaku_hantei=0;
+  var momo_get_hantei=0;
+  var ringo_get_hantei=0;
+  var oba_hantei=0;
+  var speech_hantei=0;
+  bg_canvas();
+  oba_anim();
+  momo_anim();
+  ringo_anim();
+
+
+
+
+  var blocklyArea = document.getElementById('blocklyArea');
+  var blocklyDiv = document.getElementById('blocklyDiv');
+  /*var demoWorkspace = Blockly.inject(blocklyDiv,
+  {media: '../../media/',
+  toolbox: document.getElementById('toolbox')}
+
+);*/
+
+
+var toolbox = document.getElementById("toolbox");
+
+var options = {
+  toolbox : toolbox,
+  collapse : false,
+  comments : false,
+  disable : false,
+  maxBlocks : Infinity,
+  trashcan : false,
+  horizontalLayout : false,
+  toolboxPosition : 'start',
+  css : true,
+  media : 'https://blockly-demo.appspot.com/static/media/',
+  rtl : false,
+  scrollbars : false,
+  sounds : true,
+  oneBasedIndex : true
+};
+
+/* Inject your workspace */
+var demoWorkspace = Blockly.inject(blocklyDiv, options);
+
+/* Load Workspace Blocks from XML to workspace. Remove all code below if no blocks to load */
+
+/* TODO: Change workspace blocks XML ID if necessary. Can export workspace blocks XML from Workspace Factory. */
+var workspaceBlocks = document.getElementById("workspaceBlocks");
+
+/* Load blocks to workspace. */
+Blockly.Xml.domToWorkspace(demoWorkspace, workspaceBlocks);
+
+
+var onresize = function(e) {
+  // Compute the absolute coordinates and dimensions of blocklyArea.
+  var element = blocklyArea;
+  var x = 0;
+  var y = 0;
+  do {
+    x += element.offsetLeft;
+    y += element.offsetTop;
+    element = element.offsetParent;
+  } while (element);
+  // Position blocklyDiv over blocklyArea.
+  blocklyDiv.style.left = x + 'px';
+  blocklyDiv.style.top = y + 'px';
+  blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
+  blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
+};
+window.addEventListener('resize', onresize, false);
+onresize();
+Blockly.svgResize(demoWorkspace);
+
+function speak_cancel(){//音声読み上げキャンセル
+  speechSynthesis.cancel(ss);
+
+}
+
+
+function speak(text){//音声読み上げスタート
+
+  ss = new SpeechSynthesisUtterance(text);
+
+  if(speech_hantei<1){
+
+  }else{
+
+    //speak_cancel();
+  }
+
+  speechSynthesis.speak(ss);
+
+  //speechSynthesis.speak(ss)
+
+  speech_hantei=1;
+
+
+}
+
+function tutorial_1(){
+  var tutorial_hantei=0;
+  //tutorial_anim(tutorial_hantei);
+  var elem2 = document.getElementById("output_area2");
+  elem2.innerHTML ="<br><br>じっさいにやってみましょう！おばあさんは、「せんたくを5まい」と「ももを1こ」ひろうひつようがあります。";
+  speak(input_text="じっさいにやってみましょう！おばあさんは、「せんたくを5まい」と「ももを1こ」ひろうひつようがあります。");
+}
+function tutorial_2(){
+  var tutorial_hantei=1;
+  //tutorial_anim(tutorial_hantei);
+  var elem2 = document.getElementById("output_area2");
+  elem2.innerHTML ="";
+  //speak(input_text="ものをひろうには、おばあさんのめのまえにももがないとひろえません。");
+}
+
+function tutorial(){
+
+
+  setTimeout(tutorial_1,1000);
+  setTimeout(tutorial_2,10000);
+
+
+}
+
+tutorial();
+
+
+
+function oba_anim(){//おばあさんのアニメーション
+  if(oba_hantei==0){//何もしない
+
+    var cnvs_oba = document.getElementById('Canvas_oba');
+    var ctx_oba = cnvs_oba.getContext('2d');
+    cnvs_oba.width = cnvs_oba.width;
+
+    var img = new Image();
+    /* 画像が読み込まれてからcanvasへ書き出す */
+    img.onload = function() {
+      ctx_oba.drawImage(img, 500, 50);
+    };
+    //ctx.translate(140,0);
+    /* 画像URLを指定して、画像のロードを開始する */
+    img.src = "./img/oba_nosentaku.png";
+
+
+
+  }else if(oba_hantei==1){//洗う
+    //var momo_sentaku_hantei;
+
+    //var canvas = document.getElementById("cvs");
+    //var ctx = canvas.getContext("2d");
+
+    function sentaku_anim(){
+
+      var cnvs_oba = document.getElementById('Canvas_oba');
+      var ctx_oba = cnvs_oba.getContext('2d');
+      cnvs_oba.width = cnvs_oba.width;
+      /* 新しいImageオブジェクトを生成 */
+      var img = new Image();
+      /* 画像が読み込まれてからcanvasへ書き出す */
+      img.onload = function() {
+        ctx_oba.drawImage(img, 500, 50);
+      };
+
+      img.src = "./img/oba_sentaku.png";
+
+
+    }
+
+    function sentaku_anim2(){
+
+      var cnvs_oba = document.getElementById('Canvas_oba');
+      var ctx_oba = cnvs_oba.getContext('2d');
+      cnvs_oba.width = cnvs_oba.width;
+      /* 新しいImageオブジェクトを生成 */
+      var img = new Image();
+      /* 画像が読み込まれてからcanvasへ書き出す */
+      img.onload = function() {
+        ctx_oba.drawImage(img, 500, 50);
+      };
+
+      img.src = "./img/oba_sentaku2.png";
+
+
+    }
+
+    function sentaku_anim3(){
+
+      var cnvs_oba = document.getElementById('Canvas_oba');
+      var ctx_oba = cnvs_oba.getContext('2d');
+      cnvs_oba.width = cnvs_oba.width;
+      /* 新しいImageオブジェクトを生成 */
+      var img = new Image();
+      /* 画像が読み込まれてからcanvasへ書き出す */
+      img.onload = function() {
+        ctx_oba.drawImage(img, 500, 50);
+      };
+
+      img.src = "./img/oba_nosentaku.png";
+
+
+    }
+
+    sentaku_anim();
+
+    //ctx.translate(140,0);
+    /* 画像URLを指定して、画像のロードを開始する */
+
+
+    setTimeout(sentaku_anim2,500);
+    setTimeout(sentaku_anim3,900);
+
+
+
+
+
+
+  }else if(oba_hantei==2){//拾う＿失敗
+
+    function hirou_anim(){
+
+      var cnvs_oba = document.getElementById('Canvas_oba');
+      var ctx_oba = cnvs_oba.getContext('2d');
+      cnvs_oba.width = cnvs_oba.width;
+
+      var img = new Image();
+      /* 画像が読み込まれてからcanvasへ書き出す */
+      img.onload = function() {
+        ctx_oba.drawImage(img, 500, 0);
+      };
+      //ctx.translate(140,0);
+      /* 画像URLを指定して、画像のロードを開始する */
+      img.src = "./img/oba_hirou.png";
+
+
+    }
+
+    function hirou_anim2(){
+
+      var cnvs_oba = document.getElementById('Canvas_oba');
+      var ctx_oba = cnvs_oba.getContext('2d');
+      cnvs_oba.width = cnvs_oba.width;
+
+      var img = new Image();
+      /* 画像が読み込まれてからcanvasへ書き出す */
+      img.onload = function() {
+        ctx_oba.drawImage(img, 500, 0);
+      };
+      //ctx.translate(140,0);
+      /* 画像URLを指定して、画像のロードを開始する */
+      img.src = "./img/oba_hirou2.png";
+
+
+    }
+
+    function hirou_anim_fales(){
+
+      var cnvs_oba = document.getElementById('Canvas_oba');
+      var ctx_oba = cnvs_oba.getContext('2d');
+      cnvs_oba.width = cnvs_oba.width;
+
+      var img = new Image();
+      /* 画像が読み込まれてからcanvasへ書き出す */
+      img.onload = function() {
+        ctx_oba.drawImage(img, 500, 0);
+      };
+      //ctx.translate(140,0);
+      /* 画像URLを指定して、画像のロードを開始する */
+      img.src = "./img/oba_hirou5.png";
+
+
+    }
+
+    hirou_anim();
+    setTimeout(hirou_anim2,400);
+    setTimeout(hirou_anim_fales,900);
+
+
+
+
+
+
+
+
+  }else if(oba_hantei==3){//拾う＿りんご
+
+
+    function hirou_anim(){
+
+      var cnvs_oba = document.getElementById('Canvas_oba');
+      var ctx_oba = cnvs_oba.getContext('2d');
+      cnvs_oba.width = cnvs_oba.width;
+
+      var img = new Image();
+      /* 画像が読み込まれてからcanvasへ書き出す */
+      img.onload = function() {
+        ctx_oba.drawImage(img, 500, 0);
+      };
+      //ctx.translate(140,0);
+      /* 画像URLを指定して、画像のロードを開始する */
+      img.src = "./img/oba_hirou.png";
+
+
+    }
+
+    function hirou_anim2(){
+
+      var cnvs_oba = document.getElementById('Canvas_oba');
+      var ctx_oba = cnvs_oba.getContext('2d');
+      cnvs_oba.width = cnvs_oba.width;
+
+      var img = new Image();
+      /* 画像が読み込まれてからcanvasへ書き出す */
+      img.onload = function() {
+        ctx_oba.drawImage(img, 500, 0);
+      };
+      //ctx.translate(140,0);
+      /* 画像URLを指定して、画像のロードを開始する */
+      img.src = "./img/oba_hirou2.png";
+
+
+    }
+
+    function hirou_anim_ringo(){
+
+      var cnvs_oba = document.getElementById('Canvas_oba');
+      var ctx_oba = cnvs_oba.getContext('2d');
+      cnvs_oba.width = cnvs_oba.width;
+
+      var img = new Image();
+      /* 画像が読み込まれてからcanvasへ書き出す */
+      img.onload = function() {
+        ctx_oba.drawImage(img, 500, 0);
+      };
+      //ctx.translate(140,0);
+      /* 画像URLを指定して、画像のロードを開始する */
+      img.src = "./img/oba_hirou4.png";
+
+
+    }
+
+    hirou_anim();
+    setTimeout(hirou_anim2,400);
+    setTimeout(hirou_anim_ringo,900);
+
+
+
+
+
+  }else if(oba_hantei==4){//拾う＿もも
+
+
+    function hirou_anim(){
+
+      var cnvs_oba = document.getElementById('Canvas_oba');
+      var ctx_oba = cnvs_oba.getContext('2d');
+      cnvs_oba.width = cnvs_oba.width;
+
+      var img = new Image();
+      /* 画像が読み込まれてからcanvasへ書き出す */
+      img.onload = function() {
+        ctx_oba.drawImage(img, 500, 0);
+      };
+      //ctx.translate(140,0);
+      /* 画像URLを指定して、画像のロードを開始する */
+      img.src = "./img/oba_hirou.png";
+
+
+    }
+
+    function hirou_anim2(){
+
+      var cnvs_oba = document.getElementById('Canvas_oba');
+      var ctx_oba = cnvs_oba.getContext('2d');
+      cnvs_oba.width = cnvs_oba.width;
+
+      var img = new Image();
+      /* 画像が読み込まれてからcanvasへ書き出す */
+      img.onload = function() {
+        ctx_oba.drawImage(img, 500, 0);
+      };
+      //ctx.translate(140,0);
+      /* 画像URLを指定して、画像のロードを開始する */
+      img.src = "./img/oba_hirou2.png";
+
+
+    }
+
+    function hirou_anim_momo(){
+
+      var cnvs_oba = document.getElementById('Canvas_oba');
+      var ctx_oba = cnvs_oba.getContext('2d');
+      cnvs_oba.width = cnvs_oba.width;
+
+      var img = new Image();
+      /* 画像が読み込まれてからcanvasへ書き出す */
+      img.onload = function() {
+        ctx_oba.drawImage(img, 500, 0);
+      };
+      //ctx.translate(140,0);
+      /* 画像URLを指定して、画像のロードを開始する */
+      img.src = "./img/oba_hirou3.png";
+
+
+    }
+
+    hirou_anim();
+    setTimeout(hirou_anim2,400);
+    setTimeout(hirou_anim_momo,900);
+
+
+
+
+
+  }else if(oba_hantei==null){
+
+    var cnvs_oba = document.getElementById('Canvas_oba');
+    var ctx_oba = cnvs_oba.getContext('2d');
+    cnvs_oba.width = cnvs_oba.width;
+
+    var img = new Image();
+    /* 画像が読み込まれてからcanvasへ書き出す */
+    img.onload = function() {
+      ctx_oba.drawImage(img, 500, 50);
+    };
+    //ctx.translate(140,0);
+    /* 画像URLを指定して、画像のロードを開始する */
+    img.src = "./img/oba_nosentaku.png";
+
+
+
+  }
+}
+
+function bg_canvas(){
+  //var canvas = document.getElementById("cvs");
+  //var ctx = canvas.getContext("2d");
+  var cnvs_bg = document.getElementById('Canvas_bg');
+  var ctx_bg = cnvs_bg.getContext('2d');
+  /* 新しいImageオブジェクトを生成 */
+  var img = new Image();
+  /* 画像が読み込まれてからcanvasへ書き出す */
+  img.onload = function() {
+    ctx_bg.drawImage(img, 0, 0);
+  };
+  //ctx.translate(140,0);
+  /* 画像URLを指定して、画像のロードを開始する */
+  img.src = "./img/bg_story_1.png";
+}
+
+function momo_anim(){
+
+  if(momo_canvas_hantei<20){
+
+    var momo_x,momo_y;
+
+    //var canvas = document.getElementById("cvs");
+    //var ctx = canvas.getContext("2d");
+    var cnvs_momo = document.getElementById('Canvas_momo');
+    var ctx_momo = cnvs_momo.getContext('2d');
+
+    if(momo_get_hantei==0){
+
+
+      cnvs_momo.width = cnvs_momo.width;
+      /* 新しいImageオブジェクトを生成 */
+      var img = new Image();
+
+      /* 画像が読み込まれてからcanvasへ書き出す */
+      img.onload = function() {
+        ctx_momo.drawImage(img, 0, 0);
+      };
+      momo_x=momo_canvas_hantei*50;
+
+
+
+
+      if(momo_canvas_hantei%2==0){
+
+        //ctx.rotate( 45 * Math.PI / 180 );
+        ctx_momo.translate(momo_x,300);
+
+      }else{
+
+        //ctx.rotate( -45 * Math.PI / 180 );
+        ctx_momo.translate(momo_x,290);
+
+      }
+
+      //  ctx.translate(100,0);
+      /* 画像URLを指定して、画像のロードを開始する */
+      img.src = "./img/momo.png";
+      momo_canvas_hantei++;
+
+
+    }else{
+
+      cnvs_momo.width = cnvs_momo.width;
+      clearInterval(momo_anim_interval);
+
+      momo_canvas_hantei++;
+
+
+
+    }
+
+
+
+
+
+
+
+  }else{
+
+    clearInterval(momo_anim_interval);
+
+  }
+  console.log(momo_canvas_hantei+" momo "+momo_x);
+
+
+}
+
+function ringo_anim(){
+
+  if(momo_canvas_hantei<20){
+
+    var momo_x,momo_y;
+
+    //var canvas = document.getElementById("cvs");
+    //var ctx = canvas.getContext("2d");
+    var cnvs_ringo = document.getElementById('Canvas_ringo');
+    var ctx_ringo = cnvs_ringo.getContext('2d');
+
+    if(ringo_get_hantei==0){
+
+
+      cnvs_ringo.width = cnvs_ringo.width;
+      /* 新しいImageオブジェクトを生成 */
+      var img = new Image();
+
+      /* 画像が読み込まれてからcanvasへ書き出す */
+      img.onload = function() {
+        ctx_ringo.drawImage(img, 0, 0);
+      };
+      momo_x=momo_canvas_hantei*50;
+      momo_x=momo_x+150;
+
+
+
+      if(momo_canvas_hantei%2==0){
+
+        //ctx.rotate( 45 * Math.PI / 180 );
+        ctx_ringo.translate(momo_x,300);
+
+      }else{
+
+        //ctx.rotate( -45 * Math.PI / 180 );
+        ctx_ringo.translate(momo_x,290);
+
+      }
+
+      //  ctx.translate(100,0);
+      /* 画像URLを指定して、画像のロードを開始する */
+      img.src = "./img/ringo.png";
+      //momo_canvas_hantei++;
+
+
+    }else{
+
+      cnvs_ringo.width = cnvs_ringo.width;
+
+      clearInterval(ringo_anim_interval);
+
+
+    }
+
+
+
+
+
+
+  }else{
+
+
+    clearInterval(ringo_anim_interval);
+  }
+  console.log(momo_canvas_hantei+" momo "+momo_x);
+
+
+}
+
+function showCode() {
+  // Generate JavaScript code and display it.
+  Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+  var code = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+  alert(code);
+  //document.write(code);
+
+
+
+
+}
+
+function runCode() {
+
+  speak_cancel();
+  clearInterval(momo_anim_interval);
+  clearInterval(ringo_anim_interval);
+  momo_canvas_hantei=0;
+  momo_get_hantei=0;
+  ringo_get_hantei=0;
+  oba_hantei=0;
+  block_id=[];
+
+
+
+  // Generate JavaScript code and run it.
+  window.LoopTrap = 1000;
+
+
+
+  Blockly.JavaScript.INFINITE_LOOP_TRAP =
+  'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+  var code = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+  Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+  try {
+    var count;
+    var new_count=0;
+    var elem =document.getElementById("output_area");
+
+    elem.innerHTML = "";
+
+    if(code!=""){
+
+
+      eval(code);
+
+      momo_anim_interval=setInterval(momo_anim,500);
+      ringo_anim_interval=setInterval(ringo_anim,500);
+      //setInterval(momo_anim,1000);
+
+
+
+    }
+
+
+
+
+  } catch (e) {
+    //alert(e);
+    document.write(e);
+  }
+
+  story_1();
+
+
+  //console.log(test);
+
+}
+
+function story_1(){
+  var dx=0;
+  var dy=0;
+  var time_count,hantei_momo,hantei_ringo,array_length=0;
+  var time_count=0;
+  hantei_momo=0;
+  hantei_ringo=0;
+
+  var i,set_time;
+  var output_array=[];
+  time_count=0;
+  var hantei_arau=0;
+  oba_anim();
+
+
+  array_length=block_id.length;
+
+  console.log("block_id "+block_id+" lengh "+array_length);
+
+
+
+  for(i=0;i<array_length;i++){
+    //var set_i=i;
+    console.log("i "+i+" length "+array_length);
+
+
+    set_time=i*1000;
+
+
+
+    var elem = document.getElementById("output_area");
+    //elem.innerHTML += "block_id "+block_id[i];
+    //output_area();
+
+    setTimeout(output_area,set_time);
+    console.log("settime "+set_time);
+
+
+
+    function output_area(){
+
+      if(block_id[time_count]=="b"){
+
+        if(time_count==5){
+
+
+
+          //elem.innerHTML ="block_id "+block_id[time_count]+" set_time "+time_count*1000+" "+hantei_arau+"枚　ももを拾いました<br>";
+          hantei_momo=1;
+          momo_get_hantei=1;
+          oba_hantei=4;
+
+          elem.innerHTML ="[もくひょう]せんたく"+hantei_arau+"/5まい　もも"+hantei_momo+"/1こ";
+
+          oba_anim();
+
+
+
+
+        }else if (time_count==3) {
+
+          hantei_ringo=1;
+          ringo_get_hantei=1;
+
+
+
+          //elem.innerHTML ="block_id "+block_id[time_count]+" set_time "+time_count*1000+" "+hantei_arau+"枚　りんごを拾いました<br>";
+          oba_hantei=3;
+
+          elem.innerHTML ="[もくひょう]せんたく"+hantei_arau+"/5まい　もも"+hantei_momo+"/1こ";
+
+          oba_anim();
+
+
+        }else{
+
+
+
+          //elem.innerHTML ="block_id "+block_id[time_count]+" set_time "+time_count*1000+" "+hantei_arau+"枚　なにも拾えませんでした<br>";
+          oba_hantei=2;
+
+          elem.innerHTML ="[もくひょう]せんたく"+hantei_arau+"/5まい　もも"+hantei_momo+"/1こ";
+
+          oba_anim();
+
+        }
+
+
+
+      }else if(block_id[time_count]=="a"){
+
+        hantei_arau++;
+        oba_hantei=1;
+
+        elem.innerHTML ="[もくひょう]せんたく"+hantei_arau+"/5まい　もも"+hantei_momo+"/1こ";
+
+
+        //elem.innerHTML ="block_id "+block_id[time_count]+" set_time "+time_count*1000+" "+hantei_arau+"枚<br>";
+        oba_anim();
+
+
+
+
+
+      }else{
+
+        oba_hantei=0;
+
+        elem.innerHTML ="[もくひょう]せんたく"+hantei_arau+"/5まい　もも"+hantei_momo+"/1こ";
+
+
+        //elem.innerHTML ="block_id "+block_id[time_count]+" set_time "+time_count*1000+" "+hantei_arau+"枚<br>";
+        oba_anim();
+
+
+      }
+
+
+
+
+
+      dx=dx+100;
+
+
+      flag_hantei();
+      //momo_anim();
+
+      //var elem = document.getElementById("output_area");
+      if(block_id[time_count+1]==null){//今参照しているブロックの次のブロックが存在しない場合読み上げ
+
+        input_text="おばあさんが、かわへせんたくにいくと…どんぶらこ、どんぶらこ、とももがながれてきました。"+input_text;
+
+        speak(input_text);
+      }
+
+
+      console.log("for "+time_count);
+      time_count++;
+    }
+
+
+
+
+    function flag_hantei(){
+
+      if(hantei_momo==1&&hantei_ringo==0){
+        if(hantei_arau>=5){
+          var elem2 = document.getElementById("output_area2");
+
+          var elem3 = document.getElementById("next_page");
+          elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_21.html\'\">つぎへ</button>";
+
+
+          elem2.innerHTML ="とてもおいしそうなももだったのでおばあさんは、ももをひろい、もってかえりました。";
+          input_text="とてもおいしそうなももだったのでおばあさんは、ももをひろい、もってかえりました。";
+          //elem2.innerHTML ="目標１達成　目標２達成　ルート「正ルート」";
+
+        }else{
+
+          var elem2 = document.getElementById("output_area2");
+          var elem3 = document.getElementById("next_page");
+          elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_22.html'\">つぎへ</button>";
+
+          elem2.innerHTML ="おばあさんは、せんたくをわすれてももをひろい、もってかえりました。";
+          input_text="おばあさんは、せんたくをわすれてももをひろい、もってかえりました。";
+          //elem2.innerHTML ="目標１達成　目標２未達　ルート「ももは拾えたが洗濯できなかった」";
+
+
+        }
+
+      }else if(hantei_momo==0&&hantei_ringo==1){
+
+        if(hantei_arau>=5){
+
+          var elem2 = document.getElementById("output_area2");
+          var elem3 = document.getElementById("next_page");
+          elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_23.html\'\">つぎへ</button>";
+
+          elem2.innerHTML ="しかしおばあさんは、りんごのほうがおいしそうだったのでりんごをひろい、もってかえりました。";
+          input_text="しかしおばあさんは、りんごのほうがおいしそうだったのでりんごをひろい、もってかえりました。";
+          //elem2.innerHTML ="目標１未達　目標２達成　ルート「りんごたろう」";
+
+        }else{
+
+          var elem2 = document.getElementById("output_area2");
+          var elem3 = document.getElementById("next_page");
+          elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_23.html\'\">つぎへ</button>";
+
+          elem2.innerHTML ="しかしおばあさんは、りんごのほうがおいしそうだったので、せんたくもせず、いそいでりんごをひろい、もってかえりました。";
+          input_text="しかしおばあさんは、りんごのほうがおいしそうだったので、せんたくもせず、いそいでりんごをひろい、もってかえりました。";
+          //elem2.innerHTML ="目標１未達　目標２未達　ルート「りんごは拾えたが洗濯できなかった」";
+
+
+        }
+
+
+      }else if(hantei_momo==1&&hantei_ringo==1){
+
+        if(hantei_arau>=5){
+          var elem2 = document.getElementById("output_area2");
+          var elem3 = document.getElementById("next_page");
+          elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_24.html\'\">つぎへ</button>";
+
+          elem2.innerHTML ="おばあさんは、よくばりなのでりんごも、もももひろいました。";
+          input_text="おばあさんは、よくばりなのでりんごも、もももひろいました。";
+
+          //elem2.innerHTML ="目標１達成　目標２達成　ルート「もももりんごも拾った　ももりんごたろう」";
+
+        }else{
+
+          var elem2 = document.getElementById("output_area2");
+          var elem3 = document.getElementById("next_page");
+          elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_24.html\'\">つぎへ</button>";
+
+          elem2.innerHTML ="おばあさんは、せんたくをせずに、りんごも、もももひろいました。";
+          input_text="おばあさんは、せんたくをせずに、りんごも、もももひろいました。";
+          //elem2.innerHTML ="目標１達成　目標２未達　ルート「ももりんごたろう　洗濯できなかった」";
+
+
+        }
+
+      }else{
+
+        if(hantei_arau>=5){
+
+          var elem2 = document.getElementById("output_area2");
+          var elem3 = document.getElementById("next_page");
+          elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_25.html\'\">つぎへ</button>";
+
+          //elem2.innerHTML ="目標１未達　目標２達成　ルート「何も拾えなかった　けど洗えた」";
+          elem2.innerHTML ="おばあさんは、ももはひろわずにせんたくをしていえにかえりました。";
+          input_text="おばあさんは、ももはひろわずにせんたくをしていえにかえりました。";
+
+        }else{
+
+          var elem2 = document.getElementById("output_area2");
+          var elem3 = document.getElementById("next_page");
+          elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_35.html\'\">つぎへ</button>";
+
+          elem2.innerHTML ="おばあさんは、ももにびっくりして、せんたくをできずにいえにかえりました。";
+          input_text="おばあさんは、ももにびっくりして、せんたくをできずにいえにかえりました。";
+
+          //elem2.innerHTML ="目標１未達　目標２未達　ルート「何も拾えなかった　あらうこともできなかった」";
+
+
+
+        }
+
+
+      }
+
+
+
+
+    }
+
+
+
+
+
+
+
+  }
+  /*  var output_area=function(){
+
+  elem.innerHTML ="block_id "+block_id[i]+" set_time "+set_time;
+
+
+}*/
+
+//setTimeout(output_area,set_time);
+
+if(set_time==null){
+  var elem = document.getElementById("output_area");
+
+  elem.innerHTML ="<font color=red>ぶろっくをおいてから、うごかすをおしてください</font>";
+
+  input_text="ぶろっくをおいてから、うごかすをおしてください";
+
+  speak(input_text);
+
+  input_text="";
+
+
+}
+
+
+
+
+
+
+
+
+
+}
+
+
+
+function story_2(){
+
+
+
+
+}
+
+
+
+var code_view = function(){
+
+  Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+  var code = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+
+
+  var elem =document.getElementById("code_area");elem.innerHTML = code;
+
+}
+
+
+//setInterval(code_view, 1000);
+
+
+</script>
+</body>
+</html>

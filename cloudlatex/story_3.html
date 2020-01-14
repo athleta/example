@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>プログラミングでももたろう</title>
+
+  <link rel="stylesheet" type="text/css" href="./css/story.css">
+
+</head>
+
+<body>
+
+  <div id="top">
+
+    <canvas id="Canvas_bg" width="1000px" height="500px"></canvas>
+
+
+
+
+
+
+
+  </div>
+
+  <div id="menu_area">
+
+    <button type="button" class="btn" onclick="window.location.reload();">さいしょから</button>
+    <button type="button" class="btn" onclick="location.href='./index.html'">ほーむ</button>
+
+
+
+
+  </div>
+
+  <div id="bottom">
+
+
+
+
+
+
+
+    <span id="output_area2">ももからうまれたあかちゃんに、おじいさんとおばあさんはももたろうとなづけました。ももたろうはすくすくとそだってりっぱなしょうねんになりました。</span>
+    <span id="next_page"></span>
+
+
+
+
+
+
+
+  </div>
+
+
+  <script>
+  speak_cancel();
+
+  var elem3 = document.getElementById("next_page");
+  elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_4.html\'\">つぎへ</button>";
+
+  var input_text="ももからうまれたあかちゃんに、おじいさんとおばあさんはももたろうとなづけました。ももたろうはすくすくとそだってりっぱなしょうねんになりました。";
+  var ss;
+
+  function bg_canvas(){
+    //var canvas = document.getElementById("cvs");
+    //var ctx = canvas.getContext("2d");
+    var cnvs_bg = document.getElementById('Canvas_bg');
+    var ctx_bg = cnvs_bg.getContext('2d');
+    /* 新しいImageオブジェクトを生成 */
+    var img = new Image();
+    /* 画像が読み込まれてからcanvasへ書き出す */
+    img.onload = function() {
+      ctx_bg.drawImage(img, 0, 0);
+    };
+    //ctx.translate(140,0);
+    /* 画像URLを指定して、画像のロードを開始する */
+    img.src = "./img/story_3.png";
+  }
+
+  bg_canvas();
+
+
+
+
+  function speak_cancel(){//音声読み上げキャンセル
+    speechSynthesis.cancel(ss);
+
+  }
+
+
+  function speak(){//音声読み上げスタート
+
+    ss = new SpeechSynthesisUtterance(input_text);
+
+
+    speechSynthesis.speak(ss);
+
+    //speechSynthesis.speak(ss)
+
+
+  }
+
+  setTimeout(speak,1000);
+
+
+</script>
+</body>
+</html>

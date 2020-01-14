@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>プログラミングももたろう</title>
+
+  <script src="./google-blockly/blockly_compressed.js"></script>
+  <script src="./google-blockly/blocks_compressed.js"></script>
+  <script src="./google-blockly/javascript_compressed.js"></script>
+  <script src="./google-blockly/msg/js/ja.js"></script>
+
+  <script src="./google-blockly/blocks/inu_if.js"></script>
+  <script src="./google-blockly/generators/javaScript/inu_if_code.js"></script>
+
+  <script src="./google-blockly/blocks/saru_if.js"></script>
+  <script src="./google-blockly/generators/javaScript/saru_if_code.js"></script>
+
+  <script src="./google-blockly/blocks/kiji_if.js"></script>
+  <script src="./google-blockly/generators/javaScript/kiji_if_code.js"></script>
+
+  <script src="./google-blockly/blocks/neko_if.js"></script>
+  <script src="./google-blockly/generators/javaScript/neko_if_code.js"></script>
+
+  <script src="./google-blockly/blocks/new_repeat.js"></script>
+  <script src="./google-blockly/generators/javaScript/new_repeat_code.js"></script>
+
+  <script src="./google-blockly/blocks/ageru_block.js"></script>
+  <script src="./google-blockly/generators/javaScript/ageru_block_code.js"></script>
+
+  <script src="./google-blockly/blocks/aruku_block.js"></script>
+  <script src="./google-blockly/generators/javaScript/aruku_block_code.js"></script>
+
+  <script src="./google-blockly/blocks/new_if.js"></script>
+  <script src="./google-blockly/generators/javaScript/new_if_code.js"></script>
+
+  <script src="./google-blockly/blocks/new_ifelse.js"></script>
+  <script src="./google-blockly/generators/javaScript/new_ifelse_code.js"></script>
+
+
+  <link rel="stylesheet" type="text/css" href="./css/question.css">
+
+  <style>
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  table {
+    height: 100%;
+    width: 100%;
+  }
+  #blocklyArea {
+    height: 99%;
+  }
+  </style>
+
+</head>
+<body>
+
+  <div class="main_container">
+
+    <div class="left">
+
+      <div id="blocklyArea">
+
+
+        <div id="blocklyDiv" style="position: absolute"></div>
+
+
+      </div>
+
+
+
+
+
+    </div>
+
+
+    <div class="right">
+
+      <div id="top">
+        <canvas id="Canvas_inu" width="1000px" height="500px"></canvas>
+        <canvas id="Canvas_neko" width="1000px" height="500px"></canvas>
+        <canvas id="Canvas_saru" width="1000px" height="500px"></canvas>
+        <canvas id="Canvas_kiji" width="1000px" height="500px"></canvas>
+
+        <canvas id="Canvas_momotaro" width="1000px" height="500px"></canvas>
+        <canvas id="Canvas_tutorial" width="1000px" height="500px"></canvas>
+        <canvas id="Canvas_bg" width="1000px" height="500px"></canvas>
+
+
+
+      </div>
+
+      <div id="status">
+
+        <span id="output_area">[もくひょう]いぬ0/1 さる0/1 きじ0/1 あるく0/9ます</span>
+
+
+      </div>
+
+      <div id="menu_area">
+
+        <button class="btn" onclick="runCode()" id="runcode">うごかす</button>
+        <button class="btn" onclick="tutorial()">せつめいをきく</button>
+        <button class="btn" onclick="speak_cancel()">せつめいをとめる</button>
+        <button type="button" class="btn" onclick="window.location.reload();">さいしょから</button>
+        <button type="button" class="btn" onclick="location.href='./index.html'">ほーむ</button>
+
+
+
+      </div>
+
+      <div id="bottom">
+        ももたろうが、おにがしまへのみちをあるいていると…
+
+        <span id="output_area2"></span>
+        <span id="next_page"></span>
+
+
+      </div>
+
+
+
+    </div>
+
+  </div>
+
+
+
+  <xml xmlns="http://www.w3.org/1999/xhtml" id="workspaceBlocks" style="display:none">
+    <variables></variables>
+
+  </xml>
+
+  <xml id="toolbox" style="display: none">
+
+    <category name="ぶろっく" colour="#93a55b">
+      <block type="aruku_block"></block>
+      <block type="ageru_block"></block>
+
+      <block type="inu_if"></block>
+      <block type="saru_if"></block>
+      <block type="kiji_if"></block>
+      <block type="neko_if"></block>
+      <block type="new_if"></block>
+      <block type="new_ifelse"></block>
+      <block type="new_repeat">
+        <value name="TIMES">
+          <shadow type="math_number">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_number">
+        <field name="NUM">0</field>
+      </block>
+
+    </category>
+  </xml><!--toolbar設定xml-->
+
+  <script>
+  speak_cancel();
+  var flag_id,input_text,ss;
+  var block_id,momo,ringo=[];
+  var susumu_hantei=0;
+  var inu_hantei=0;
+  var neko_hantei=0;
+  var saru_hantei=0;
+  var kiji_hantei=0;
+
+  var hantei_aruku=0;
+  var hantei_ageru=0;
+  var hantei_inu=0;
+  var hantei_saru=0;
+  var hantei_kiji=0;
+  var hantei_neko=0;
+  bg_canvas();
+  inu_anim();
+  saru_anim();
+  neko_anim();
+  kiji_anim();
+  momotaro_anim();
+
+
+
+
+  var blocklyArea = document.getElementById('blocklyArea');
+  var blocklyDiv = document.getElementById('blocklyDiv');
+  document.getElementById("runcode").disabled = "disabled";
+  /*var demoWorkspace = Blockly.inject(blocklyDiv,
+  {media: '../../media/',
+  toolbox: document.getElementById('toolbox')}
+
+);*/
+
+
+var toolbox = document.getElementById("toolbox");
+
+var options = {
+  toolbox : toolbox,
+  collapse : false,
+  comments : false,
+  disable : false,
+  maxBlocks : Infinity,
+  trashcan : false,
+  horizontalLayout : false,
+  toolboxPosition : 'start',
+  css : true,
+  media : 'https://blockly-demo.appspot.com/static/media/',
+  rtl : false,
+  scrollbars : false,
+  sounds : true,
+  oneBasedIndex : true
+};
+
+/* Inject your workspace */
+var demoWorkspace = Blockly.inject(blocklyDiv, options);
+
+/* Load Workspace Blocks from XML to workspace. Remove all code below if no blocks to load */
+
+/* TODO: Change workspace blocks XML ID if necessary. Can export workspace blocks XML from Workspace Factory. */
+var workspaceBlocks = document.getElementById("workspaceBlocks");
+
+/* Load blocks to workspace. */
+Blockly.Xml.domToWorkspace(demoWorkspace, workspaceBlocks);
+
+
+var onresize = function(e) {
+  // Compute the absolute coordinates and dimensions of blocklyArea.
+  var element = blocklyArea;
+  var x = 0;
+  var y = 0;
+  do {
+    x += element.offsetLeft;
+    y += element.offsetTop;
+    element = element.offsetParent;
+  } while (element);
+  // Position blocklyDiv over blocklyArea.
+  blocklyDiv.style.left = x + 'px';
+  blocklyDiv.style.top = y + 'px';
+  blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
+  blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
+};
+window.addEventListener('resize', onresize, false);
+onresize();
+Blockly.svgResize(demoWorkspace);
+
+
+function speak_cancel(){//音声読み上げキャンセル
+  speechSynthesis.cancel(ss);
+
+}
+
+
+function speak(text){//音声読み上げスタート
+
+  ss = new SpeechSynthesisUtterance(text);
+
+  speechSynthesis.speak(ss);
+
+  //speechSynthesis.speak(ss)
+
+  speech_hantei=1;
+
+
+}
+
+function tutorial_1(){
+  var tutorial_hantei=0;
+  tutorial_anim(tutorial_hantei);
+  var elem2 = document.getElementById("output_area2");
+  elem2.innerHTML ="<br><br>ここではもういちど、ぶろっくでももたろうをうごかしてもらいます。";
+  speak(input_text="ここではもういちど、ぶろっくでももたろうをうごかしてもらいます。");
+}
+function tutorial_2(){
+  var tutorial_hantei=1;
+  //tutorial_anim(tutorial_hantei);
+  var elem2 = document.getElementById("output_area2");
+  elem2.innerHTML ="<br><br>「あるく」ぶろっくはももたろうが１ます、すすみます。「あげる」ぶろっくはそのますにいるどうぶつにきびだんごをわたしてなかまにします。";
+  speak(input_text="「あるく」ぶろっくはももたろうが１ます、すすみます。「あげる」ぶろっくはそのますにいるどうぶつにきびだんごをわたしてなかまにします。");
+}
+function tutorial_3(){
+  var tutorial_hantei=2;
+  //tutorial_anim(tutorial_hantei);
+  var elem2 = document.getElementById("output_area2");
+  elem2.innerHTML ="<br><br>いぬ、さる、きじの３びきをなかまにして、ごーるの9ますまでももたろうをすすめましょう。せつめいを、もう1かいききたいばあいは、「せつめいぼたん」をおしてください。";
+  speak(input_text="いぬ、さる、きじの３びきをなかまにして、ごーるの9ますまでももたろうをすすめましょう。せつめいを、もう1かいききたいばあいは、「せつめいぼたん」をおしてください。");
+}
+function tutorial_4(){
+  var tutorial_hantei=3;
+  tutorial_anim(tutorial_hantei);
+
+}
+function tutorial_5(){
+  var tutorial_hantei=4;
+  tutorial_anim(tutorial_hantei);
+  document.getElementById("runcode").disabled = "";
+  var elem2 = document.getElementById("output_area2");
+  elem2.innerHTML ="";
+
+
+}
+
+function tutorial(){
+
+
+  setTimeout(tutorial_1,1000);
+  setTimeout(tutorial_2,10000);
+  setTimeout(tutorial_3,25000);
+  setTimeout(tutorial_4,35000);
+  setTimeout(tutorial_5,45000);
+
+}
+
+tutorial();
+
+
+
+
+function tutorial_anim(tutorial_hantei){
+  var cnvs_tuto = document.getElementById('Canvas_tutorial');
+  var ctx_tuto = cnvs_tuto.getContext('2d');
+  cnvs_tuto.width = cnvs_tuto.width;
+
+  var img = new Image();
+  /* 画像が読み込まれてからcanvasへ書き出す */
+  img.onload = function() {
+    ctx_tuto.drawImage(img, 0, 0);
+  };
+  if(tutorial_hantei==0){
+    img.src = "./img/tutorial_61.png";
+
+
+  }else if(tutorial_hantei==1){
+    img.src = "./img/tutorial_62.png";
+
+
+  }else if(tutorial_hantei==2){
+    img.src = "./img/tutorial_63.png";
+
+
+  }else if(tutorial_hantei==3){
+    img.src = "./img/tutorial_64.png";
+
+
+  }else if(tutorial_hantei==4){
+    img.src = "./img/tutorial_65.png";
+    cnvs_tuto.width = cnvs_tuto.width;
+
+  }else if(tutorial_hantei==5){
+    iimg.src = "./img/tutorial_65.png";
+
+
+
+  }
+
+}
+
+
+function bg_canvas(){
+  //var canvas = document.getElementById("cvs");
+  //var ctx = canvas.getContext("2d");
+  var cnvs_bg = document.getElementById('Canvas_bg');
+  var ctx_bg = cnvs_bg.getContext('2d');
+  /* 新しいImageオブジェクトを生成 */
+  var img = new Image();
+  /* 画像が読み込まれてからcanvasへ書き出す */
+  img.onload = function() {
+    ctx_bg.drawImage(img, 0, 0);
+  };
+  //ctx.translate(140,0);
+  /* 画像URLを指定して、画像のロードを開始する */
+  img.src = "./img/bg_story_2.png";
+}
+
+function momotaro_ageru_anim(){
+
+  var tarou_x,tarou_y;
+  tarou_x=hantei_aruku*100;
+
+  var cnvs_momotaro = document.getElementById('Canvas_momotaro');
+  var ctx_momotaro = cnvs_momotaro.getContext('2d');
+  cnvs_momotaro.width = cnvs_momotaro.width;
+
+  var img = new Image();
+  /* 画像が読み込まれてからcanvasへ書き出す */
+  img.onload = function() {
+    ctx_momotaro.drawImage(img, tarou_x, 200);
+  };
+  //ctx.translate(140,0);
+  /* 画像URLを指定して、画像のロードを開始する */
+  img.src = "./img/momotaro3.png";
+
+}
+
+function momotaro_anim(){
+
+  var tarou_x,tarou_y;
+  tarou_x=hantei_aruku*100;
+
+  function aruku_anim(){
+
+    var cnvs_momotaro = document.getElementById('Canvas_momotaro');
+    var ctx_momotaro = cnvs_momotaro.getContext('2d');
+    cnvs_momotaro.width = cnvs_momotaro.width;
+
+    var img = new Image();
+    /* 画像が読み込まれてからcanvasへ書き出す */
+    img.onload = function() {
+      ctx_momotaro.drawImage(img, tarou_x, 200);
+    };
+    //ctx.translate(140,0);
+    /* 画像URLを指定して、画像のロードを開始する */
+    img.src = "./img/momotaro.png";
+
+  }
+
+  function aruku_anim2(){//中間アニメ
+
+    var cnvs_momotaro = document.getElementById('Canvas_momotaro');
+    var ctx_momotaro = cnvs_momotaro.getContext('2d');
+    cnvs_momotaro.width = cnvs_momotaro.width;
+
+    var img = new Image();
+    /* 画像が読み込まれてからcanvasへ書き出す */
+    img.onload = function() {
+      ctx_momotaro.drawImage(img, tarou_x-50, 200);
+    };
+    //ctx.translate(140,0);
+    /* 画像URLを指定して、画像のロードを開始する */
+    img.src = "./img/momotaro2.png";
+
+  }
+
+  if(hantei_aruku>0){//1マス以上進んでいたら歩行アニメ
+    aruku_anim2();
+
+    setTimeout(aruku_anim,500);
+
+  }else{
+
+    aruku_anim();
+
+
+  }
+
+
+
+
+}
+
+function inu_anim(){
+
+
+  if(hantei_inu==0){
+
+    var cnvs_inu = document.getElementById('Canvas_inu');
+    var ctx_inu = cnvs_inu.getContext('2d');
+    cnvs_inu.width = cnvs_inu.width;
+
+    var img = new Image();
+    /* 画像が読み込まれてからcanvasへ書き出す */
+    img.onload = function() {
+      ctx_inu.drawImage(img, 200, 100);
+    };
+    //ctx.translate(140,0);
+    /* 画像URLを指定して、画像のロードを開始する */
+    img.src = "./img/inu_nomal.png";
+
+
+  }else{
+
+    momotaro_ageru_anim();
+
+    var cnvs_inu = document.getElementById('Canvas_inu');
+    var ctx_inu = cnvs_inu.getContext('2d');
+    cnvs_inu.width = cnvs_inu.width;
+
+    var img = new Image();
+    /* 画像が読み込まれてからcanvasへ書き出す */
+    img.onload = function() {
+      ctx_inu.drawImage(img, 200, 100);
+    };
+    //ctx.translate(140,0);
+    /* 画像URLを指定して、画像のロードを開始する */
+    img.src = "./img/inu_nakama.png";
+
+
+
+  }
+
+}
+
+function saru_anim(){
+
+
+
+
+  if(hantei_saru==0){
+
+
+
+    var cnvs_saru = document.getElementById('Canvas_saru');
+    var ctx_saru = cnvs_saru.getContext('2d');
+    cnvs_saru.width = cnvs_saru.width;
+
+    var img = new Image();
+    /* 画像が読み込まれてからcanvasへ書き出す */
+    img.onload = function() {
+      ctx_saru.drawImage(img, 400, 100);
+    };
+    //ctx.translate(140,0);
+    /* 画像URLを指定して、画像のロードを開始する */
+    img.src = "./img/saru_nomal.png";
+
+
+  }else{
+
+    momotaro_ageru_anim();
+
+    var cnvs_saru = document.getElementById('Canvas_saru');
+    var ctx_saru = cnvs_saru.getContext('2d');
+    cnvs_saru.width = cnvs_saru.width;
+
+    var img = new Image();
+    /* 画像が読み込まれてからcanvasへ書き出す */
+    img.onload = function() {
+      ctx_saru.drawImage(img, 400, 100);
+    };
+    //ctx.translate(140,0);
+    /* 画像URLを指定して、画像のロードを開始する */
+    img.src = "./img/saru_nakama.png";
+
+
+
+  }
+
+
+}
+
+function neko_anim(){
+
+
+
+  if(hantei_neko==0){
+
+
+
+    var cnvs_neko = document.getElementById('Canvas_neko');
+    var ctx_neko = cnvs_neko.getContext('2d');
+    cnvs_neko.width = cnvs_neko.width;
+
+    var img = new Image();
+    /* 画像が読み込まれてからcanvasへ書き出す */
+    img.onload = function() {
+      ctx_neko.drawImage(img, 300, 100);
+    };
+    //ctx.translate(140,0);
+    /* 画像URLを指定して、画像のロードを開始する */
+    img.src = "./img/neko_nomal.png";
+
+
+  }else{
+
+    momotaro_ageru_anim();
+
+    var cnvs_neko = document.getElementById('Canvas_neko');
+    var ctx_neko = cnvs_neko.getContext('2d');
+    cnvs_neko.width = cnvs_neko.width;
+
+    var img = new Image();
+    /* 画像が読み込まれてからcanvasへ書き出す */
+    img.onload = function() {
+      ctx_neko.drawImage(img, 300, 100);
+    };
+    //ctx.translate(140,0);
+    /* 画像URLを指定して、画像のロードを開始する */
+    img.src = "./img/neko_nakama.png";
+
+
+
+  }
+
+}
+
+function kiji_anim(){
+
+
+
+  if(hantei_kiji==0){
+
+
+
+    var cnvs_kiji = document.getElementById('Canvas_kiji');
+    var ctx_kiji = cnvs_kiji.getContext('2d');
+    cnvs_kiji.width = cnvs_kiji.width;
+
+    var img = new Image();
+    /* 画像が読み込まれてからcanvasへ書き出す */
+    img.onload = function() {
+      ctx_kiji.drawImage(img, 600, 100);
+    };
+    //ctx.translate(140,0);
+    /* 画像URLを指定して、画像のロードを開始する */
+    img.src = "./img/kiji_nomal.png";
+
+
+  }else{
+
+    momotaro_ageru_anim();
+
+    var cnvs_kiji = document.getElementById('Canvas_kiji');
+    var ctx_kiji = cnvs_kiji.getContext('2d');
+    cnvs_kiji.width = cnvs_kiji.width;
+
+    var img = new Image();
+    /* 画像が読み込まれてからcanvasへ書き出す */
+    img.onload = function() {
+      ctx_kiji.drawImage(img, 600, 100);
+    };
+    //ctx.translate(140,0);
+    /* 画像URLを指定して、画像のロードを開始する */
+    img.src = "./img/kiji_nakama.png";
+
+
+
+  }
+
+
+}
+
+function showCode() {
+  // Generate JavaScript code and display it.
+  Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+  var code = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+  alert(code);
+  //document.write(code);
+
+
+
+
+}
+
+function runCode() {
+  speak_cancel();
+
+  //cnvs_momotaro.width = cnvs_momotaro.width;
+  //cnvs_kiji.width = cnvs_kiji.width;
+  //cnvs_neko.width = cnvs_neko.width;
+  //cnvs_saru.width = cnvs_saru.width;
+  //cnvs_inu.width = cnvs_inu.width;
+
+  block_id=[];
+  // Generate JavaScript code and run it.
+  window.LoopTrap = 1000;
+  Blockly.JavaScript.INFINITE_LOOP_TRAP =
+  'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+  var code = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+  Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+  try {
+    var count;
+    var new_count=0;
+    var elem =document.getElementById("output_area");
+
+    elem.innerHTML = "";
+
+    eval(code);
+  } catch (e) {
+    //alert(e);
+    document.write(e);
+  }
+
+  story_2();
+
+
+  //console.log(test);
+
+}
+
+function story_2(){
+  var time_count,hantei_momo,hantei_ringo,array_length=0;
+  var time_count=0;
+  hantei_aruku=0;
+  hantei_ageru=0;
+  hantei_inu=0;
+  hantei_saru=0;
+  hantei_kiji=0;
+  hantei_neko=0;
+  susumu_hantei=0;
+
+
+
+  var i,set_time;
+  var output_array=[];
+  time_count=0;
+  var hantei_arau=0;
+
+  neko_anim();
+  inu_anim();
+  saru_anim();
+  kiji_anim();
+
+
+  array_length=block_id.length;
+
+  console.log("block_id "+block_id+" lengh "+array_length);
+
+
+  for(i=0;i<array_length;i++){
+    //var set_i=i;
+    console.log("i "+i+" length "+array_length);
+    susumu_hantei=0;
+
+
+    set_time=i*1000;
+
+
+
+    var elem = document.getElementById("output_area");
+    //elem.innerHTML += "block_id "+block_id[i];
+    //output_area();
+
+    setTimeout(output_area,set_time);
+    console.log("settime "+set_time);
+
+    function output_area(){
+
+      if(block_id[time_count]=="d"){
+
+        if(hantei_aruku==2){
+
+          //elem.innerHTML ="block_id "+block_id[time_count]+" set_time "+time_count*1000+" "+hantei_aruku+"歩　犬が仲間になりました<br>";
+          elem.innerHTML ="[もくひょう]犬"+hantei_inu+"/1 さる"+hantei_saru+"/1 さる"+hantei_kiji+"/1 あるく"+hantei_aruku+"/9ます";
+          hantei_inu=1;
+          inu_anim();
+
+
+        }else if (hantei_aruku==3) {
+
+          hantei_neko=1;
+          neko_anim();
+          elem.innerHTML ="[もくひょう]犬"+hantei_inu+"/1 さる"+hantei_saru+"/1 さる"+hantei_kiji+"/1 あるく"+hantei_aruku+"/9ます";
+          //elem.innerHTML ="block_id "+block_id[time_count]+" set_time "+time_count*1000+" "+hantei_aruku+"歩　ねこは仲間になってくれませんでした<br>";
+
+        }else if (hantei_aruku==4) {
+
+          hantei_saru=1;
+          saru_anim();
+          elem.innerHTML ="[もくひょう]犬"+hantei_inu+"/1 さる"+hantei_saru+"/1 さる"+hantei_kiji+"/1 あるく"+hantei_aruku+"/9ます";
+          //elem.innerHTML ="block_id "+block_id[time_count]+" set_time "+time_count*1000+" "+hantei_aruku+"歩　さるが仲間になりました<br>";
+
+        }else if (hantei_aruku==6) {
+
+          hantei_kiji=1;
+          kiji_anim();
+          elem.innerHTML ="[もくひょう]犬"+hantei_inu+"/1 さる"+hantei_saru+"/1 さる"+hantei_kiji+"/1 あるく"+hantei_aruku+"/9ます";
+          //elem.innerHTML ="block_id "+block_id[time_count]+" set_time "+time_count*1000+" "+hantei_aruku+"歩　きじが仲間になりました<br>";
+
+        }else{
+
+          elem.innerHTML ="[もくひょう]犬"+hantei_inu+"/1 さる"+hantei_saru+"/1 さる"+hantei_kiji+"/1 あるく"+hantei_aruku+"/9ます";
+          //elem.innerHTML ="block_id "+block_id[time_count]+" set_time "+time_count*1000+" "+hantei_aruku+"歩　誰もいない<br>";
+
+        }
+
+
+
+      }else if(block_id[time_count]=="c"){
+
+        hantei_aruku++;
+        susumu_hantei=1;
+        momotaro_anim();
+        elem.innerHTML ="[もくひょう]犬"+hantei_inu+"/1 さる"+hantei_saru+"/1 さる"+hantei_kiji+"/1 あるく"+hantei_aruku+"/9ます";
+        //elem.innerHTML ="block_id "+block_id[time_count]+" set_time "+time_count*1000+" "+hantei_aruku+"歩<br>";
+
+      }else{
+        elem.innerHTML ="[もくひょう]犬"+hantei_inu+"/1 さる"+hantei_saru+"/1 さる"+hantei_kiji+"/1 あるく"+hantei_aruku+"/9ます";
+        //elem.innerHTML ="block_id "+block_id[time_count]+" set_time "+time_count*1000+" "+hantei_aruku+"歩<br>";
+
+      }
+
+      flag_hantei();
+
+      //var elem = document.getElementById("output_area");
+
+      if(block_id[time_count+1]==null){//今参照しているブロックの次のブロックが存在しない場合読み上げ
+        input_text="ももたろうが、おにがしまへのみちをあるいていると…"+input_text;
+
+        speak(input_text);
+      }
+
+
+      console.log("for "+time_count);
+      time_count++;
+    }
+
+
+
+    function flag_hantei(){
+
+      var output_neko="";
+      var output_inu="";
+      var output_saru="";
+      var output_kiji="";
+
+      if(hantei_inu==1&&hantei_saru==1&&hantei_kiji==1){
+
+        if(hantei_aruku>=6){
+          if(hantei_neko==0){
+            var elem2 = document.getElementById("output_area2");
+
+            //elem2.innerHTML ="目標１達成　ルート「正ルート」";
+            elem2.innerHTML ="いっぴきのいぬにであいました。ももたろうは、いぬにきびだんごをあげてなかまになってもらいました。しばらくするとさるときじにであいました。おなじようにきびだんごをあげてなかまになってもらいました。";
+            input_text="いっぴきのいぬにであいました。ももたろうは、いぬにきびだんごをあげてなかまになってもらいました。しばらくするとさるときじにであいました。おなじようにきびだんごをあげてなかまになってもらいました。";
+
+            var elem3 = document.getElementById("next_page");
+            elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_61.html\'\">つぎへ</button>";
+
+          }else{
+
+            var elem2 = document.getElementById("output_area2");
+
+            //elem2.innerHTML ="目標１達成　　ルート「正ルートだけどねこを仲間にしようとしました」";
+            elem2.innerHTML ="いっぴきのいぬにであいました。ももたろうは、いぬにきびだんごをあげてなかまになってもらいました。しばらくするとねこにであいました。きびだんごをあげてなかまになってもらおうとしましたが、ねこはおこってしまいました。びっくりしたももたろうは、おにがしまにいくのをやめました。";
+            input_text="いっぴきのいぬにであいました。ももたろうは、いぬにきびだんごをあげてなかまになってもらいました。しばらくするとねこにであいました。きびだんごをあげてなかまになってもらおうとしましたが、ねこはおこってしまいました。びっくりしたももたろうは、おにがしまにいくのをやめました。";
+
+            var elem3 = document.getElementById("next_page");
+            elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_62.html\'\">つぎへ</button>";
+
+
+          }
+
+
+        }else{
+
+          var elem2 = document.getElementById("output_area2");
+
+          //elem2.innerHTML ="目標１達成　　ルート「正ルートだけど歩ききってない」";
+          elem2.innerHTML ="いっぴきのいぬにであいました。ももたろうは、いぬにきびだんごをあげてなかまになってもらいました。しばらくするとさるときじにであいました。おなじようにきびだんごをあげてなかまになってもらいました。しかしももたろうは、つかれたので、とちゅうであるくのをやめておにがしまにいくのをあきらめました。";
+          input_text="いっぴきのいぬにであいました。ももたろうは、いぬにきびだんごをあげてなかまになってもらいました。しばらくするとさるときじにであいました。おなじようにきびだんごをあげてなかまになってもらいました。しかしももたろうは、つかれたので、とちゅうであるくのをやめておにがしまにいくのをあきらめました。";
+
+          var elem3 = document.getElementById("next_page");
+          elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_62.html\'\">つぎへ</button>";
+
+
+        }
+
+
+      }else{
+
+        if(hantei_aruku>=6){
+
+          if(hantei_neko==1){
+
+            if(hantei_inu==1){
+
+              output_neko="とねこ";
+
+            }else{
+
+              output_neko="ねこ";
+
+
+            }
+
+          }
+          if(hantei_inu==1){
+            output_inu="いぬ";
+
+          }
+          if(hantei_saru==1){
+
+            if(hantei_inu==1){
+
+              output_saru="とさる";
+
+            }else{
+
+              output_saru="さる";
+
+
+            }
+
+
+          }
+          if(hantei_kiji==1){
+
+            if(hantei_inu==1||hantei_arau==1){
+
+              output_kiji="ときじ";
+
+            }else{
+
+              output_kiji="きじ";
+
+
+            }
+
+
+          }
+
+          if(hantei_inu==1||hantei_saru==1||hantei_kiji==1||hantei_neko==1){
+
+            if(hantei_neko==1){
+
+              var elem2 = document.getElementById("output_area2");
+
+              //elem2.innerHTML ="目標１未達　ルート「三匹のうち誰かが仲間になっていない」<br>"+output_neko+output_inu+output_saru+output_kiji;
+              elem2.innerHTML =""+output_inu+output_neko+output_saru+""+output_kiji+"にであいました。ももたろうは、"+output_inu+output_neko+output_saru+""+output_kiji+"にきびだんごをあげてなかまになってもらおうとしました。しかしねこには、なかまになってもらえませんでした。";
+              input_text=""+output_inu+output_neko+output_saru+""+output_kiji+"にであいました。ももたろうは、"+output_inu+output_neko+output_saru+""+output_kiji+"にきびだんごをあげてなかまになってもらおうとしました。しかしねこには、なかまになってもらえませんでした。";
+
+              var elem3 = document.getElementById("next_page");
+              elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_63.html\'\">つぎへ</button>";
+
+
+
+            }else{
+
+              var elem2 = document.getElementById("output_area2");
+
+              //elem2.innerHTML ="目標１未達　ルート「三匹のうち誰かが仲間になっていない」<br>"+output_neko+output_inu+output_saru+output_kiji;
+              elem2.innerHTML =""+output_inu+""+output_saru+""+output_kiji+"にであいました。ももたろうは、"+output_inu+""+output_saru+""+output_kiji+"にきびだんごをあげてなかまになってもらいました。";
+              input_text=""+output_inu+""+output_saru+""+output_kiji+"にあいました。ももたろうは、"+output_inu+""+output_saru+""+output_kiji+"にきびだんごをあげてなかまになってもらいました。";
+
+              var elem3 = document.getElementById("next_page");
+              elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_63.html\'\">つぎへ</button>";
+
+
+
+            }
+
+          }else{
+
+            var elem2 = document.getElementById("output_area2");
+
+            //elem2.innerHTML ="目標１未達　ルート「三匹のうち誰かが仲間になっていない」<br>"+output_neko+output_inu+output_saru+output_kiji;
+            elem2.innerHTML ="いぬやさるをみかけましたが、なにもせずそのままあるきつづけました。";
+            input_text="いぬやさるをみかけましたが、なにもせずそのままあるきつづけました。";
+
+            var elem3 = document.getElementById("next_page");
+            elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_63.html\'\">つぎへ</button>";
+
+
+
+          }
+
+
+
+
+
+        }else{
+
+          if(hantei_neko==1){
+
+            if(hantei_inu==1){
+
+              output_neko="とねこ";
+
+            }else{
+
+              output_neko="ねこ";
+
+
+            }
+
+          }
+          if(hantei_inu==1){
+            output_inu="いぬ";
+
+          }
+          if(hantei_saru==1){
+
+            if(hantei_inu==1){
+
+              output_saru="とさる";
+
+            }else{
+
+              output_saru="さる";
+
+
+            }
+
+
+          }
+          if(hantei_kiji==1){
+
+            if(hantei_inu==1||hantei_arau==1){
+
+              output_kiji="ときじ";
+
+            }else{
+
+              output_kiji="きじ";
+
+
+            }
+
+
+          }
+
+          if(hantei_inu==1||hantei_saru==1||hantei_kiji==1||hantei_neko==1){
+
+            if(hantei_neko==1){
+
+              var elem2 = document.getElementById("output_area2");
+
+              //elem2.innerHTML ="目標１未達　ルート「三匹のうち誰かが仲間になっていない」<br>"+output_neko+output_inu+output_saru+output_kiji;
+              elem2.innerHTML =""+output_inu+output_neko+output_saru+""+output_kiji+"にであいました。ももたろうは、"+output_inu+output_neko+output_saru+""+output_kiji+"にきびだんごをあげてなかまになってもらおうとしました。しかしねこには、なかまになってもらえませんでした。ももたろうはつかれたので、とちゅうであるくのをやめて、おにがしまにいくのをあきらめました。";
+              input_text=""+output_inu+output_neko+output_saru+""+output_kiji+"にであいました。ももたろうは、"+output_inu+output_neko+output_saru+""+output_kiji+"にきびだんごをあげてなかまになってもらおうとしました。しかしねこには、なかまになってもらえませんでした。ももたろうはつかれたので、とちゅうであるくのをやめて、おにがしまにいくのをあきらめました。";
+
+              var elem3 = document.getElementById("next_page");
+              elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_62.html\'\">つぎへ</button>";
+
+
+
+            }else{
+
+              var elem2 = document.getElementById("output_area2");
+
+              //elem2.innerHTML ="目標１未達　ルート「三匹のうち誰かが仲間になっていない」<br>"+output_neko+output_inu+output_saru+output_kiji;
+              elem2.innerHTML =""+output_inu+""+output_saru+""+output_kiji+"にであいました。ももたろうは、"+output_inu+""+output_saru+""+output_kiji+"にきびだんごをあげてなかまになってもらいました。しかしももたろうは、つかれたので、とちゅうであるくのをやめておにがしまにいくのをあきらめました。";
+              input_text=""+output_inu+""+output_saru+""+output_kiji+"にあいました。ももたろうは、"+output_inu+""+output_saru+""+output_kiji+"にきびだんごをあげてなかまになってもらいました。しかしももたろうは、つかれたので、とちゅうであるくのをやめておにがしまにいくのをあきらめました。";
+
+              var elem3 = document.getElementById("next_page");
+              elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_62.html\'\">つぎへ</button>";
+
+
+
+            }
+
+          }else{
+
+            var elem2 = document.getElementById("output_area2");
+
+            //elem2.innerHTML ="目標１未達　ルート「三匹のうち誰かが仲間になっていない」<br>"+output_neko+output_inu+output_saru+output_kiji;
+            elem2.innerHTML ="いぬやさるをみかけましたが、なにもせずそのままあるきつづけました。しかしももたろうは、つかれたので、とちゅうであるくのをやめておにがしまにいくのをあきらめました。";
+            input_text="いぬやさるをみかけましたが、なにもせずそのままあるきつづけました。しかしももたろうは、つかれたので、とちゅうであるくのをやめておにがしまにいくのをあきらめました。";
+
+            var elem3 = document.getElementById("next_page");
+            elem3.innerHTML ="<button type=\"button\" class=\"next_btn\" onclick=\"location.href=\'./story_62.html\'\">つぎへ</button>";
+
+
+
+          }
+
+
+
+        }
+
+      }
+
+
+
+
+    }
+
+
+
+
+
+
+
+  }
+  /*  var output_area=function(){
+
+  elem.innerHTML ="block_id "+block_id[i]+" set_time "+set_time;
+
+
+}*/
+
+//setTimeout(output_area,set_time);
+
+if(set_time==null){
+  var elem = document.getElementById("output_area");
+
+  elem.innerHTML ="<font color=red>ぶろっくをおいてから、うごかすをおしてください</font>";
+
+  input_text="ぶろっくをおいてから、うごかすをおしてください";
+
+  speak(input_text);
+
+  input_text="";
+
+
+}
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+var code_view = function(){
+
+  Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+  var code = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+
+
+  var elem =document.getElementById("code_area");elem.innerHTML = code;
+
+}
+
+
+//setInterval(code_view, 1000);
+
+
+</script>
+</body>
+</html>
